@@ -29,6 +29,9 @@ module GraphQL
             raw_value.ast_node = irep_node.ast_node
             raw_value.path = irep_node.path
             execution_context.add_error(raw_value)
+          when GraphQL::Field::DEPENDENT
+            # A dependency has been registered with the query, move along
+            return GraphQL::Field::DEPENDENT
           when Array
             list_errors = raw_value.each_with_index.select { |value, _| value.is_a?(GraphQL::ExecutionError) }
             if list_errors.any?

@@ -118,15 +118,24 @@ module GraphQL
   #     field :name, name_field
   #   end
   #
+  # @example A field that loads with dependencies
+  #    field :person, PersonType do
+  #      argument :id, !types.ID
+  #      resolve_dependent FetchLoader.new(Person), -> (loader, obj, args, ctx) {
+  #        loader.find(obj.person_id)
+  #      }
+  #
   class Field
     include GraphQL::Define::InstanceDefinable
     accepts_definitions :name, :description, :deprecation_reason,
       :resolve, :type, :arguments,
       :property, :hash_key, :complexity, :mutation,
+      resolve_dependent: GraphQL::Define::AssignResolveDependent,
       argument: GraphQL::Define::AssignArgument
 
-
     lazy_defined_attr_accessor :name, :deprecation_reason, :description, :property, :hash_key, :mutation, :arguments, :complexity
+
+    DEPENDENT = :__graphql_field_dependent__
 
     # @!attribute [r] resolve_proc
     #   @return [<#call(obj, args,ctx)>] A proc-like object which can be called to return the field's value

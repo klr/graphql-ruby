@@ -1,5 +1,6 @@
 require "graphql/query/arguments"
 require "graphql/query/context"
+require "graphql/query/dependencies"
 require "graphql/query/executor"
 require "graphql/query/literal_input"
 require "graphql/query/serial_execution"
@@ -66,6 +67,13 @@ module GraphQL
       @analysis_errors = []
       @internal_representation = nil
       @was_validated = false
+
+      @dependencies = GraphQL::Query::Dependencies.new(self)
+    end
+
+    # @return [GraphQL::Query::Dependencies]
+    def register_dependency(resolver, key, handler)
+      @dependencies.register(resolver, key, handler)
     end
 
     # Get the result for this query, executing it once
