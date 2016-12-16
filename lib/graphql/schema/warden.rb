@@ -38,13 +38,14 @@ module GraphQL
     #
     # @api private
     class Warden
-      # @param query [GraphQL::Query]
       # @param mask [<#call(member)>] Objects are hidden when `.call(member, ctx)` returns true
-      def initialize(query, mask)
+      # @param context [GraphQL::Query::Context]
+      # @param schema [GraphQL::Schema]
+      # @param deep_check [Boolean]
+      def initialize(mask, context:, schema:)
         @mask = mask
-        @query = query
-        @context = @query.context
-        @schema = @query.schema
+        @context = context
+        @schema = schema
       end
 
       # @return [Array<GraphQL::BaseType>] Visible types in the schema
@@ -99,9 +100,8 @@ module GraphQL
         obj_type.interfaces.select { |t| visible?(t) }
       end
 
-      # @return [Array<GraphQL::Field>] Visible input fields on `input_obj_type`
-      def input_fields(input_obj_type)
-        input_obj_type.arguments.each_value.select { |f| visible_field?(f) }
+      def directives
+        @schema.directives.each_value.select { |d| visible?(d) }
       end
 
       private
