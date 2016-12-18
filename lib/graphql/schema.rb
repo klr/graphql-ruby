@@ -365,6 +365,15 @@ module GraphQL
       end
     end
 
+    # Return a GraphQL schema string for the defined types in the schema
+    # @param context [Hash]
+    # @param only [<#call(member, ctx)>]
+    # @param except [<#call(member, ctx)>]
+    def to_definition(only: nil, except: nil, context: {})
+      GraphQL::Schema::Printer.print_schema(self, only: only, except: except, context: context)
+    end
+
+
     protected
 
     def rescues?
