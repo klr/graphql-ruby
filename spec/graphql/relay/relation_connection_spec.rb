@@ -21,9 +21,9 @@ describe GraphQL::Relay::RelationConnection do
 
   describe "results" do
     let(:query_string) {%|
-      query getShips($first: Int, $after: String, $last: Int, $before: String,  $nameIncludes: String){
+      query getShips($first: Int, $after: String, $last: Int, $before: String, $offset: Int, $nameIncludes: String){
         empire {
-          bases(first: $first, after: $after, last: $last, before: $before, nameIncludes: $nameIncludes) {
+          bases(first: $first, after: $after, last: $last, before: $before, offset: $offset, nameIncludes: $nameIncludes) {
             ... basesConnection
           }
         }
@@ -95,6 +95,14 @@ describe GraphQL::Relay::RelationConnection do
       result = star_wars_query(query_string, "before" => last_cursor, "last" => 10)
       assert_equal(["Death Star", "Shield Generator"], get_names(result))
 
+    end
+
+    it 'can slice with offset' do
+      result = star_wars_query(query_string, "first" => 1, "offset" => 1)
+      assert_equal(["Shield Generator"], get_names(result))
+
+      result = star_wars_query(query_string, "first" => 1, "offset" => 2)
+      assert_equal(["Headquarters"], get_names(result))
     end
 
     it 'handles cursors beyond the bounds of the array' do

@@ -3,12 +3,12 @@ module GraphQL
   module Relay
     # Subclasses must implement:
     #   - {#cursor_from_node}, which returns an opaque cursor for the given item
-    #   - {#sliced_nodes}, which slices by `before` & `after`
+    #   - {#sliced_nodes}, which slices by `before`, `after` & `offset`
     #   - {#paged_nodes}, which applies `first` & `last` limits
     #
     # In a subclass, you have access to
     #   - {#nodes}, the collection which the connection will wrap
-    #   - {#first}, {#after}, {#last}, {#before} (arguments passed to the field)
+    #   - {#first}, {#after}, {#last}, {#before}, {#offset} (arguments passed to the field)
     #   - {#max_page_size} (the specified maximum page size that can be returned from a connection)
     #
     class BaseConnection
@@ -75,7 +75,7 @@ module GraphQL
       end
 
       # Provide easy access to provided arguments:
-      METHODS_FROM_ARGUMENTS = [:first, :after, :last, :before]
+      METHODS_FROM_ARGUMENTS = [:first, :after, :last, :before, :offset]
 
       # @!method first
       #   The value passed as `first:`, if there was one
@@ -85,6 +85,8 @@ module GraphQL
       #   The value passed as `last:`, if there was one
       # @!method before
       #   The value passed as `before:`, if there was one
+      # @!method offset
+      #   The value passed as `offset:`, if there was one
       METHODS_FROM_ARGUMENTS.each do |arg_name|
         define_method(arg_name) do
           arguments[arg_name]

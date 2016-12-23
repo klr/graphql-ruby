@@ -13,9 +13,9 @@ describe GraphQL::Relay::ArrayConnection do
 
   describe "results" do
     let(:query_string) {%|
-      query getShips($first: Int, $after: String, $last: Int, $before: String, $nameIncludes: String){
+      query getShips($first: Int, $after: String, $last: Int, $before: String, $offset: Int, $nameIncludes: String){
         rebels {
-          ships(first: $first, after: $after, last: $last, before: $before, nameIncludes: $nameIncludes) {
+          ships(first: $first, after: $after, last: $last, before: $before, offset: $offset, nameIncludes: $nameIncludes) {
             edges {
               cursor
               node {
@@ -79,6 +79,14 @@ describe GraphQL::Relay::ArrayConnection do
 
       result = star_wars_query(query_string, "before" => last_cursor, "last" => 2)
       assert_equal(["X-Wing", "Y-Wing"], get_names(result))
+    end
+
+    it 'can slice with offset' do
+      result = star_wars_query(query_string, "first" => 1, "offset" => 1)
+      assert_equal(["Y-Wing"], get_names(result))
+
+      result = star_wars_query(query_string, "first" => 1, "offset" => 2)
+      assert_equal(["A-Wing"], get_names(result))
     end
 
     it 'handles cursors beyond the bounds of the array' do

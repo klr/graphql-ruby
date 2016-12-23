@@ -45,7 +45,7 @@ module GraphQL
           if before
             [previous_offset, 0].max
           else
-            previous_offset
+            offset || previous_offset
           end
         end
       end

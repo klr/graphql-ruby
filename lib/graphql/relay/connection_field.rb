@@ -13,6 +13,7 @@ module GraphQL
           ["after", GraphQL::STRING_TYPE, "Returns the elements in the list that come after the specified global ID."],
           ["last", GraphQL::INT_TYPE, "Returns the last _n_ elements from the list."],
           ["before", GraphQL::STRING_TYPE, "Returns the elements in the list that come before the specified global ID."],
+          ["offset", GraphQL::INT_TYPE, "Returns the elements in the list offset by _n_."]
         ]
 
       DEFAULT_ARGUMENTS = ARGUMENT_DEFINITIONS.reduce({}) do |memo, arg_defn|

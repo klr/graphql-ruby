@@ -27,7 +27,7 @@ describe GraphQL::Relay::ConnectionField do
     conn_field = test_type.fields["tests"]
 
     assert_equal 0, test_field.arguments.length
-    assert_equal 4, conn_field.arguments.length
+    assert_equal 5, conn_field.arguments.length
 
     assert_instance_of GraphQL::Field::Resolve::MethodResolve, test_field.resolve_proc
     assert_instance_of GraphQL::Relay::ConnectionResolve, conn_field.resolve_proc
@@ -42,8 +42,8 @@ describe GraphQL::Relay::ConnectionField do
     connection_field = test_type.fields["tests"]
     redefined_connection_field = connection_field.redefine { argument "name", types.String }
 
-    assert_equal 4, connection_field.arguments.size
-    assert_equal 5, redefined_connection_field.arguments.size
+    assert_equal 5, connection_field.arguments.size
+    assert_equal 6, redefined_connection_field.arguments.size
 
     assert_instance_of GraphQL::Relay::ConnectionResolve, connection_field.resolve_proc
     assert_instance_of GraphQL::Relay::ConnectionResolve, redefined_connection_field.resolve_proc
